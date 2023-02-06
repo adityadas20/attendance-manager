@@ -22,7 +22,7 @@ const Authenticate = async (req, res, next) => {
 
         next();
     } catch (err) {
-        res.status(401).send(err);
+        res.status(401).send(err.message);
     }
 }
 module.exports = Authenticate;

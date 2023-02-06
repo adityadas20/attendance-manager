@@ -13,7 +13,7 @@ app.use(cookieParser());
 //     next();
 // });
 
-app.use(cors({ origin: '*', credentials: true }));
+app.use(cors({ origin: 'https://imaginative-mousse-3be478.netlify.app', credentials: true }));
 
 
 

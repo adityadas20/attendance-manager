@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
 
-app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
+app.use(cors({ origin: '*', credentials: true }));
 dotenv.config({ path: './config.env' });
 require('./db/conn');
 // const User = require('./model/userSchema');

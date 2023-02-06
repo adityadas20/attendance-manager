@@ -3,6 +3,7 @@ const User = require('../model/userSchema')
 
 const Authenticate = async (req, res, next) => {
     try {
+        throw new Error(`${req.cookies.jwtoken} is your cookie`)
         const token = req.cookies.jwtoken;
         if (!token)
             throw new Error('couldnt find token')

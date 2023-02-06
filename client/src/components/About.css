@@ -1,0 +1,36 @@
+.pleasant {
+    height: 150vh;
+    background-color: #99e71c5a;
+    position: relative;
+}
+
+.subject-container {
+    border-radius: 16px;
+    background-color: whitesmoke;
+    display: block;
+    position: absolute;
+    top: 10%;
+    left: 7%;
+    padding: 2% 2% 2% 2%;
+}
+
+.subjects {
+    display: flex;
+    /* justify-content: space-evenly; */
+    padding: 2%;
+}
+
+.subjects span {
+    margin-left: 2%;
+
+}
+
+.btn {
+    border-radius: 10em;
+}
+
+@media only screen and (max-width: 600px) {
+    .subjects {
+        scale: 0.7
+    }
+}

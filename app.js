@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
 app.use(function (req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "https://imaginative-mousse-3be478.netlify.app");
+    res.header("Access-Control-Allow-Origin", "https://imaginative-mousse-3be478.netlify.app");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });

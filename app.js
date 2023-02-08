@@ -7,15 +7,15 @@ const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
 
-// app.use(function (req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "https://imaginative-mousse-3be478.netlify.app");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "https://rococo-pie-54d1e4.netlify.app");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 
-// app.use(cors({ origin: 'https://imaginative-mousse-3be478.netlify.app', credentials: true }));
-app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
+app.use(cors({ origin: 'https://rococo-pie-54d1e4.netlify.app', credentials: true }));
+// app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
 
 
 

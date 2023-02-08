@@ -1,9 +1,12 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { UserContext } from "../App";
 import './About.css';
 
 function About() {
+    const { stateToken, dispatchToken } = useContext(UserContext);
+
     const [subjArr, setSubjArr] = useState([]);
     const [subName, setSubName] = useState('');
     const [present, setPresent] = useState(0);
@@ -13,9 +16,11 @@ function About() {
 
     const navigate = useNavigate();
 
+
     const callAboutUsPage = async () => {
         try {
-            const res = await axios.get('http://localhost:3000/about',
+            const res = await axios.post('http://localhost:3000/about',
+                { token: stateToken },
                 {
                     headers: {
                         Accept: "application/json",
@@ -60,6 +65,28 @@ function About() {
             console.log(err);
         }
     }
+    let decrementPresent = async (subjName) => {
+        try {
+            let subjPresent = 0;
+            let subjAbsent = 0;
+            let tempArr = [...subjArr];
+            for (let i = 0; i < tempArr.length; i++) {
+                if (tempArr[i].name === subjName) {
+                    tempArr[i].present--;
+                    tempArr[i].present = Math.max(tempArr[i].present, 0);
+                    subjPresent = tempArr[i].present;
+                    subjAbsent = tempArr[i].absent;
+                }
+            }
+            setSubjArr(tempArr);
+            await axios.post('http://localhost:3000/updateSubject', {
+                name: user, subjectName: subjName, present: subjPresent, absent: subjAbsent
+            })
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
     let incrementAbsent = async (subjName) => {
         try {
             let subjPresent = 0;
@@ -69,6 +96,28 @@ function About() {
             for (let i = 0; i < tempArr.length; i++) {
                 if (tempArr[i].name === subjName) {
                     tempArr[i].absent++;
+                    subjPresent = tempArr[i].present;
+                    subjAbsent = tempArr[i].absent;
+                }
+            }
+            setSubjArr(tempArr);
+            await axios.post('http://localhost:3000/updateSubject', {
+                name: user, subjectName: subjName, present: subjPresent, absent: subjAbsent
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    let decrementAbsent = async (subjName) => {
+        try {
+            let subjPresent = 0;
+            let subjAbsent = 0;
+
+            let tempArr = [...subjArr];
+            for (let i = 0; i < tempArr.length; i++) {
+                if (tempArr[i].name === subjName) {
+                    tempArr[i].absent -= 1;
+                    tempArr[i].absent = Math.max(tempArr[i].absent, 0);
                     subjPresent = tempArr[i].present;
                     subjAbsent = tempArr[i].absent;
                 }
@@ -137,7 +186,7 @@ function About() {
     return (
         <div className='pleasant'>
             <div className='subject-container'>
-                <h3>Attendance Goal: <input placeholder='goal' value={goal} onChange={(e) => handleGoalChange(e)}></input>%</h3>
+                <h3>Attendance Goal: <input placeholder={'set your attendance goal here'} onChange={(e) => handleGoalChange(e)}></input>%</h3>
                 <h1>Subjects:</h1>
                 <h3>
                     <ul>
@@ -147,8 +196,8 @@ function About() {
                                     <div className='subjects'>
                                         <h4>
                                             {subj.name}:
-                                            <span>Present: {subj.present}  <button type="button" className="btn btn-success" onClick={() => incrementPresent(subj.name)}>+</button></span>
-                                            <span>Absent: {subj.absent}  <button type="button" className="btn btn-warning" onClick={() => incrementAbsent(subj.name)}>+</button></span>
+                                            <span>Present: {subj.present}  <button type="button" className="btn btn-success" onClick={() => incrementPresent(subj.name)}>+</button><button type="button" className="btn btn-danger" onClick={() => decrementPresent(subj.name)}>-</button></span>
+                                            <span>Absent: {subj.absent}  <button type="button" className="btn btn-warning" onClick={() => incrementAbsent(subj.name)}>+</button><button type="button" className="btn btn-danger" onClick={() => decrementAbsent(subj.name)}>-</button></span>
                                             <span>Attendance: {(parseInt(subj.present) * 100 / Math.max((parseInt(subj.present) + parseInt(subj.absent)), 1)).toFixed(2)}%</span>
                                             <span><button type="button" className="btn btn-danger" onClick={() => deleteSubject(subj.name)}>Delete Subject</button></span><br />
                                             To maintain the set attendance goal, please attend next {Math.max((((goal * (parseInt(subj.absent) + parseInt(subj.present))) - 100 * parseInt(subj.present)) / (100 - goal)), 0)} classes<br />

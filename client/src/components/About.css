@@ -1,5 +1,5 @@
 .pleasant {
-    height: 150vh;
+    height: 100vh;
     background-color: #99e71c5a;
     position: relative;
 }
@@ -16,7 +16,6 @@
 
 .subjects {
     display: flex;
-    /* justify-content: space-evenly; */
     padding: 2%;
 }
 

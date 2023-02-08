@@ -5,21 +5,24 @@ import { UserContext } from "../App";
 
 function Login() {
     const { state, dispatch } = useContext(UserContext);
+    const { stateToken, dispatchToken } = useContext(UserContext);
 
-
-    const navigate = useNavigate();
+    const navigation = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const loginUser = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:3000/signin', {
+            const res = await axios.post('http://localhost:3000/signin', {
                 name: username, password
             }, { withCredentials: true });
 
             dispatch({ type: 'USER', payload: true })
-            navigate('/about');
+
+            let token = res.data.details;
+            dispatchToken({ type: 'CHANGE', payload: token })
+            navigation('/about');
         } catch (e) {
             window.alert('invalid credentials');
         }

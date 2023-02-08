@@ -4,3 +4,10 @@ export const reducer = (state, action) => {
         return action.payload;
     return state;
 }
+
+export const initialToken = '';
+export const tokenReducer = (state, action) => {
+    if (action.type === 'CHANGE')
+        return action.payload;
+    return state;
+} 

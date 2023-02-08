@@ -47,13 +47,14 @@ router.post('/signin', async (req, res) => {
         res.cookie("jwtoken", token, {
             expires: new Date(Date.now() + 12946000000),
             domain: ".netlify.app",
-            httpOnly: false
+            httpOnly: true
         })
-
         if (!isMatch)
             return res.status(400).json({ error: "invalid credentials" })
 
-        res.json({ message: "user siginin successful" })
+
+        //send token to frontend as json
+        res.json({ message: "user siginin successful", details: token })
     } catch (err) {
         console.log(err);
     }
@@ -133,11 +134,11 @@ router.post('/setGoal', async (req, res) => {
         console.log(err);
     }
 })
-router.get('/about', authenticate, (req, res) => {
+router.post('/about', authenticate, (req, res) => {
     res.send(req.rootUser);
 });
 router.get('/logout', (req, res) => {
-    res.clearCookie('jwtoken');
+    // res.clearCookie('jwtoken');
     res.status(200).send('user logout');
 });
 

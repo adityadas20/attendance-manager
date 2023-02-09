@@ -11,19 +11,23 @@ router.get('/', (req, res) => {
     res.send('hello world from auth.js')
 });
 router.post('/register', async (req, res) => {
-    const { name, password, cpassword } = req.body;
+    const { name, password, cpassword } = req.body; // data attached with axios.post request
     if (!name || !password || !cpassword) {
         return res.status(422).json({ error: "filling every field is compulsory" })
     }
+
     if (password != cpassword)
         return res.status(400).json({ error: "password and confirm password fields do not match" })
+
     try {
         const userName = await User.findOne({ name: name })
         if (userName)
             return res.status(422).json({ error: "username already exists" })
-        let attendanceGoal = 0
-        const user = new User({ name, password, attendanceGoal });
+
+        let attendanceGoal = 0; // default value of attendance
+        const user = new User({ name, password, attendanceGoal }); // fetching details of user from database
         await user.save();
+
         res.status(201).json({ message: "user registered" });
     } catch (err) {
         console.log(err);
@@ -31,30 +35,28 @@ router.post('/register', async (req, res) => {
 })
 router.post('/signin', async (req, res) => {
     try {
-        const { name, password } = req.body;
+        const { name, password } = req.body; // data attached with axios.post request
 
         if (!name || !password)
             return res.status(400).json({ error: "please enter both name and password!" });
 
-        const userLogin = await User.findOne({ name: name });
+        const userLogin = await User.findOne({ name: name }); // fetching details of user from database
         if (!userLogin)
             return res.status(400).json({ error: "invalid credentials" })
 
 
-        const isMatch = await bcrypt.compareSync(password, userLogin.password)
-        const token = await userLogin.generateAuthToken();
-        // console.log(token);
-        res.cookie("jwtoken", token, {
-            expires: new Date(Date.now() + 12946000000),
-            domain: ".netlify.app",
-            httpOnly: true
+        const isMatch = await bcrypt.compareSync(password, userLogin.password) //matching passwords
+        const token = await userLogin.generateAuthToken(); //unique token generated for every user
+
+        res.cookie("jwtoken", token, { // cookie set with the generated token
+            expires: new Date(Date.now() + 12946000000), // expiry date set to 15 days, converted to millisecs
+            domain: ".netlify.app", // allow domain to access cookies
+            httpOnly: true // necessary field to deny access of cookies by js alone, eg, document.cookies won't work anymore
         })
         if (!isMatch)
             return res.status(400).json({ error: "invalid credentials" })
 
-
-        //send token to frontend as json
-        res.json({ message: "user siginin successful", details: token })
+        res.json({ message: "user siginin successful", details: token })//send token to frontend as json
     } catch (err) {
         console.log(err);
     }
@@ -64,7 +66,7 @@ router.post('/updateSubject', async (req, res) => {
         const { name, subjectName, present, absent } = req.body;
 
         await User.findOneAndUpdate(
-            { name: name, "subjects.name": subjectName },
+            { name: name, "subjects.name": subjectName }, // find the specific subject of the specific user
             {
                 $set: {
                     'subjects.$.present': present,
@@ -83,7 +85,7 @@ router.post('/createSubject', async (req, res) => {
         await User.findOneAndUpdate(
             { name: name },
             {
-                $push: {
+                $push: { // $push creates a new entry in the database
                     "subjects": {
                         name: subjectName,
                         present: pre,
@@ -104,7 +106,7 @@ router.post('/deleteSubject', async (req, res) => {
         await User.findOneAndUpdate(
             { name: name },
             {
-                $pull: {
+                $pull: { // $ pull deletes an entry from the database
                     "subjects": {
                         name: subjectName
                     }

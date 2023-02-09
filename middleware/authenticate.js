@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../model/userSchema')
 
-const Authenticate = async (req, res, next) => {
+const Authenticate = async (req, res, next) => { // middleware before /about is called
     try {
         const { token } = req.body;
         if (!token)
@@ -11,7 +11,7 @@ const Authenticate = async (req, res, next) => {
         if (!verifyToken)
             throw new Error('couldnt verify token')
 
-        const rootUser = await User.findOne({ _id: verifyToken._id, "tokens.token": token });
+        const rootUser = await User.findOne({ _id: verifyToken._id, "tokens.token": token }); // fetching user from database
         if (!rootUser)
             throw new Error('User not found')
 

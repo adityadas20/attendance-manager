@@ -9,13 +9,13 @@ const app = express();
 app.use(cookieParser());
 
 app.use(function (req, res, next) { // necessary headers to be set for successful deployment
-    res.header("Access-Control-Allow-Origin", "https://jocular-kheer-40a74d.netlify.app");
+    res.header("Access-Control-Allow-Origin", "https://reliable-salmiakki-455664.netlify.app");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
 
-app.use(cors({ origin: 'https://jocular-kheer-40a74d.netlify.app', credentials: true })); // cors origin set
+app.use(cors({ origin: 'https://reliable-salmiakki-455664.netlify.app', credentials: true })); // cors origin set
 // app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
 
 app.use(express.json());

@@ -63,14 +63,16 @@ router.post('/signin', async (req, res) => {
 })
 router.post('/updateSubject', async (req, res) => {
     try {
-        const { name, subjectName, present, absent } = req.body;
+        const { name, subjectName, present, absent, subjectPresentDates, subjectAbsentDates } = req.body;
 
         await User.findOneAndUpdate(
             { name: name, "subjects.name": subjectName }, // find the specific subject of the specific user
             {
                 $set: {
                     'subjects.$.present': present,
-                    'subjects.$.absent': absent
+                    'subjects.$.absent': absent,
+                    'subjects.$.presentDates': subjectPresentDates,
+                    'subjects.$.absentDates': subjectAbsentDates
                 }
             }
         )

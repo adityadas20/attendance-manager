@@ -20,7 +20,9 @@ const userSchema = new mongoose.Schema({
     subjects: [{
         name: { type: String },
         present: { type: Number },
-        absent: { type: Number }
+        absent: { type: Number },
+        presentDates: [{ type: String }],
+        absentDates: [{ type: String }]
     }],
     attendanceGoal: {
         type: Number
